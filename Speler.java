@@ -18,8 +18,16 @@ public class Speler {
 		this.kaarten.add(kaart);
 	}
 
-	public List<Kaart> getKaarten() {
+	List<Kaart> getKaarten() {
 
 		return kaarten;
+	}
+
+	int puntenTotaal() {
+		int totaal = 0;
+		for (Kaart kaart : kaarten){
+			totaal += kaart.waarde;
+		}
+		return totaal;
 	}
 }

@@ -1,9 +1,5 @@
 package blackjack;
 
-import javax.swing.*;
-import java.lang.reflect.Array;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -15,18 +11,18 @@ public class Spel {
     private Bank bank;
     private Scanner scanner;
     private Boolean gameIsFinished;
-    private Integer kaartentotaal;
-    private Integer kaartentotaalBank;
 
     Spel() {
         scanner = new Scanner(System.in);
+
+    }
+
+    void spelen() {
         deck = new Kaartdeck();
         jeroen = new Speler("Jeroen");
         bank = new Bank("Bank");
         gameIsFinished = false;
-    }
 
-    void spelen() {
         System.out.println("Welkom bij Blackjack! om het spel te spelen, druk op 'y'");
         String starten = scanner.next();
 
@@ -56,16 +52,17 @@ public class Spel {
     }
 
     private void bankSpeelt() {
-        while (kaartenTotaalBank() < 17){
+        while (bank.puntenTotaal() < 17){
             deelKaart(bank);
         }
-        System.out.println("De bank heeft score: " + kaartenTotaalBank());
-        if (kaartenTotaal() > kaartenTotaalBank() || kaartenTotaalBank() > 21) {
+        System.out.println("De bank heeft score: " + bank.puntenTotaal());
+        if (jeroen.puntenTotaal() > bank.puntenTotaal() || bank.puntenTotaal() > 21) {
             System.out.println("Je hebt gewonnen!");
         }
         else {
             System.out.println("De bank heeft gewonnnen");
         }
+        speelOpnieuw();
     }
 
     private void toonHand() {
@@ -76,48 +73,36 @@ public class Spel {
         System.out.println("Je hand is een " + kaart1.soort +" "+ kaart1.nummer + " met een " + kaart2.soort +" "+ kaart2.nummer);
     }
 
-//    private void toonScore() {
-//        List<Kaart> kaarten = jeroen.getKaarten();
-//        System.out.println("De waarde van je hand is: " + kaartenTotaal());
-//    }
-
-    void startSpel() {
+    private void startSpel() {
         System.out.println("Het spel wordt nu gestart \nSucces!");
     }
 
 
-    void deelKaart(Speler speler) {
+    private void deelKaart(Speler speler) {
         speler.addKaart(deck.geeftKaart());
     }
 
-    void bepaalWinnaar() {
-        if (kaartenTotaal() == 21) {
+    private void bepaalWinnaar() {
+        if (jeroen.puntenTotaal() == 21) {
             System.out.println("Je hebt gewonnen");
             gameIsFinished = true;
+            speelOpnieuw();
         }
-        else if (kaartenTotaal() > 21){
+        else if (jeroen.puntenTotaal() > 21){
             System.out.println("Je hebt jezelf kapot gespeeld");
             gameIsFinished = true;
+            speelOpnieuw();
         }
-        else if (kaartenTotaal() <= 20) {
-            System.out.println("De waarde van je hand is: " + kaartenTotaal() + ". Wil je verder spelen? y/n");
+        else if (jeroen.puntenTotaal() <= 20) {
+            System.out.println("De waarde van je hand is: " + jeroen.puntenTotaal() + ". Wil je verder spelen? y/n");
         }
     }
 
-    private Integer kaartenTotaal() {
-        kaartentotaal = 0;
-        List<Kaart> kaarten = jeroen.getKaarten();
-        for (Kaart kaart : kaarten) {
-            kaartentotaal += kaart.waarde;
+    private void speelOpnieuw() {
+        System.out.println("Wil je nog een keer spelen? y/n");
+        String opnieuwspelen = scanner.next();
+        if (opnieuwspelen.equals("y")) {
+            spelen();
         }
-        return kaartentotaal;
-    }
-    private Integer kaartenTotaalBank() {
-        kaartentotaalBank = 0;
-        List<Kaart> kaarten = bank.getKaarten();
-        for (Kaart kaart : kaarten) {
-            kaartentotaalBank += kaart.waarde;
-        }
-        return kaartentotaalBank;
     }
 }
